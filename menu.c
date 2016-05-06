@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 void Logo() {
 	printf("\t+-+-+-+-+-+ +-+-+-+ +-+-+-+-+\n");
@@ -41,7 +42,7 @@ void DifficultyLVL(int *lvl) {
 	printf("\t\t3.Hard (6 numbers)\n");
 	printf("LVL (input number): ");
 	scanf("%d", lvl);
-	lvl = lvl + 3;
+	*lvl = *lvl + 3;
 	system("clear");
 }
 
@@ -54,27 +55,41 @@ void NumberOfPlayers(int *players) {
 	system("clear");
 }
 
-
-
 void OnePlayer(int *lvl) {
 	system("clear");
-	//char attempt_number;
-	//char n = 1;
-	if (*lvl == 0) DifficultyLVL(&*lvl);
-	Logo();
+	int i = 1;
+	int j = 0;
+	int generate_num[*lvl];
+	int attempt[*lvl];
+	int n = 1;
+	int attempt_number;
 	//Загадываем число
-	/*for (i; i < lvl; i++) {
-		v1 = rand() % 100;     //Доделать!
-	}*/
-	printf("N\tAttempt\tCows\tBulls");
-	/*for (n; n++) {
-		printf("%c", n);
-		scanf("%c", &attempt_number);
-		
-	}*/
+	generate_num[0] = 1 + rand() % 9;
+	//printf("%d\n", generate_num[0]);				//Проверка сгенерированного числа
+	for (i = 1; i < *lvl; i++) {
+		generate_num[i] = rand() % 10;
+		for (j = 0; j < i; j++) {
+			if (generate_num[i] == generate_num[j])
+				i--;
+		}
+		//printf("%d, %d\n", generate_num[i], i);	//Проверка сгенерированного массива
+	}
+	Logo();
+	printf("N\tAttempt\t\tCows\tBulls");
+	while (attempt[*lvl] != generate_num[i]) {
+		printf("%d\t", n);
+		scanf("%d", &attempt_number);
+		while (attempt_number / 10 > 0) {
+			attempt[*lvl] = attempt_number % 10;
+			*lvl--;
+		}
+		n++;
+	}
+	system("clear");
 }
 
 void Game(int *lvl, int *players) {
+	srand(time(NULL));
 	if (*lvl == 0) DifficultyLVL(&*lvl);
 	if (*players == 0) NumberOfPlayers(&*players);
 	if (*players == 1) OnePlayer(&*lvl);
